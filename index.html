@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Selfassessment</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Entrepreneurial and Leadership Skills Self-Assessment</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    h1, h2 { color: #333; }
+    form { background: white; padding: 20px; border-radius: 6px; box-shadow: 0 0 10px #ccc; max-width: 700px; margin: auto; }
+    .question { margin-bottom: 15px; }
+    .options label { margin-right: 10px; }
+    .score-result { font-size: 1.2em; margin-top: 20px; font-weight: bold; }
+    .interpretation { margin-top: 10px; padding: 10px; background: #e1f5fe; border-left: 5px solid #0288d1; }
+    button { padding: 10px 15px; font-size: 1em; cursor: pointer; background-color: #0288d1; color: white; border: none; border-radius: 4px; }
+    button:hover { background-color: #0277bd; }
+</style>
+</head>
+<body>
+<h1>Entrepreneurial and Leadership Skills Self-Assessment</h1>
+<p>Please enter your name and register number, and rate each statement on a scale from 1 to 5.</p>
+<form id="qaForm">
+  <div class="question">
+    <label for="studentName">Name *</label>
+    <input type="text" id="studentName" name="studentName" required>
+  </div>
+  <div class="question">
+    <label for="registerNumber">Register Number *</label>
+    <input type="text" id="registerNumber" name="registerNumber" required>
+  </div>
+  <!-- Questions will be injected here by script -->
+</form>
+<div class="score-result" id="scoreResult"></div>
+<div class="interpretation" id="interpretation" style="display:none;"></div>
+<script>
+const questions = [
+  {id: 1, domain: "Leadership & Initiative", text: "I can influence and motivate others toward a goal."},
+  {id: 2, domain: "Leadership & Initiative", text: "I take initiative to start new projects without waiting for instructions."},
+  {id: 3, domain: "Leadership & Initiative", text: "I handle conflicts calmly and build consensus."},
+  {id: 4, domain: "Leadership & Initiative", text: "I am comfortable making decisions even with limited information."},
+
+  {id: 5, domain: "Risk-taking & Resilience", text: "I am willing to take calculated risks for a valuable opportunity."},
+  {id: 6, domain: "Risk-taking & Resilience", text: "I view failures as learning experiences."},
+  {id: 7, domain: "Risk-taking & Resilience", text: "I remain confident and persistent in uncertainty."},
+  {id: 8, domain: "Risk-taking & Resilience", text: "I evaluate pros and cons before committing to a decision."},
+
+  {id: 9, domain: "Innovation & Creativity", text: "I look for better, faster, or more efficient ways to do things."},
+  {id: 10, domain: "Innovation & Creativity", text: "I experiment with new ideas and technologies."},
+  {id: 11, domain: "Innovation & Creativity", text: "I enjoy brainstorming unconventional solutions."},
+  {id: 12, domain: "Innovation & Creativity", text: "I seek feedback to refine innovative ideas."},
+
+  {id: 13, domain: "Problem-solving & Decision-making", text: "I analyze problems systematically before acting."},
+  {id: 14, domain: "Problem-solving & Decision-making", text: "I make balanced decisions based on facts and intuition."},
+  {id: 15, domain: "Problem-solving & Decision-making", text: "I adapt alternative strategies when plans fail."},
+  {id: 16, domain: "Problem-solving & Decision-making", text: "I use creativity and data to solve engineering challenges."},
+
+  {id: 17, domain: "Adaptability & Learning Orientation", text: "I adapt easily to changes in technology or environment."},
+  {id: 18, domain: "Adaptability & Learning Orientation", text: "I seek new knowledge to enhance my competence."},
+  {id: 19, domain: "Adaptability & Learning Orientation", text: "I handle pressure and deadlines effectively."},
+  {id: 20, domain: "Adaptability & Learning Orientation", text: "I stay flexible when team priorities shift."},
+
+  {id: 21, domain: "Ethics, Teamwork & Responsibility", text: "I maintain integrity under pressure."},
+  {id: 22, domain: "Ethics, Teamwork & Responsibility", text: "I respect diverse opinions in teamwork."},
+  {id: 23, domain: "Ethics, Teamwork & Responsibility", text: "I take responsibility for my actions."},
+  {id: 24, domain: "Ethics, Teamwork & Responsibility", text: "I ensure my projects benefit society and the environment."}
+];
+
+const form = document.getElementById('qaForm');
+
+let currentDomain = "";
+questions.forEach(q => {
+  if (q.domain !== currentDomain) {
+    currentDomain = q.domain;
+    const domainHeader = document.createElement('h2');
+    domainHeader.textContent = currentDomain;
+    form.appendChild(domainHeader);
+  }
+  const qDiv = document.createElement('div');
+  qDiv.className = "question";
+  qDiv.innerHTML = `<label for='q${q.id}'>${q.id}. ${q.text}</label><div class='options'>` +
+    [...Array(5).keys()].map(i => `<label><input type='radio' name='q${q.id}' value='${i+1}' required>${i+1}</label>`).join('') +
+    `</div>`;
+  form.appendChild(qDiv);
+});
+
+const scoreResult = document.getElementById('scoreResult');
+const interpretation = document.getElementById('interpretation');
+
+const submitBtn = document.createElement('button');
+submitBtn.type = 'submit';
+submitBtn.textContent = 'Submit and See Score';
+form.appendChild(submitBtn);
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  let studentName = document.getElementById('studentName').value.trim();
+  let registerNumber = document.getElementById('registerNumber').value.trim();
+
+  let totalScore = 0;
+  for (let i = 1; i <= questions.length; i++) {
+    const radios = document.getElementsByName('q' + i);
+    for (const r of radios) {
+      if (r.checked) {
+        totalScore += parseInt(r.value);
+        break;
+      }
+    }
+  }
+  scoreResult.textContent = `Name: ${studentName} | Register Number: ${registerNumber} \nYour total score is: ${totalScore} / 120`;
+
+  let msg = '';
+  if (totalScore >= 96) {
+    msg = "High Entrepreneurial/Intrapreneurial Potential";
+  } else if (totalScore >= 72) {
+    msg = "Moderate Potential";
+  } else if (totalScore >= 48) {
+    msg = "Developing Stage";
+  } else {
+    msg = "Needs Guidance";
+  }
+  interpretation.style.display = 'block';
+  interpretation.textContent = msg;
+});
+</script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
